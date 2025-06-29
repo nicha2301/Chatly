@@ -1,0 +1,29 @@
+{
+  "name": "chatly",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r   <img src=\"path/to/logo.png\" alt=\"Chatly Logo\" width=\"200\"/>\r </p>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicha2301/Chatly.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nicha2301/Chatly/issues"
+  },
+  "homepage": "https://github.com/nicha2301/Chatly#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "mongoose": "^8.16.1",
+    "morgan": "^1.10.0"
+  }
+}
