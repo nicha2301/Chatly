@@ -1,0 +1,60 @@
+name: Deploy Chatly API
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+      
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+    
+    - name: Install dependencies
+      run: cd backend && npm ci
+    
+    - name: Run tests
+      run: cd backend && npm test
+      env:
+        NODE_ENV: test
+        MONGODB_URI_TEST: mongodb://localhost:27017/chatly_test
+        JWT_SECRET: test_jwt_secret
+        JWT_REFRESH_SECRET: test_jwt_refresh_secret
+
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.14
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+        heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        appdir: "backend"
+        procfile: "web: npm start"
+      env:
+        HD_NODE_ENV: production 
